@@ -26,6 +26,12 @@ async function run() {
         app.get('/inventory', async (req, res) => {
             const query = {};
             const cursor = inventoryCollection.find(query);
+            const inventories = await cursor.limit(6).toArray();
+            res.send(inventories);
+        });
+        app.get('/manageInventory', async (req, res) => {
+            const query = {};
+            const cursor = inventoryCollection.find(query);
             const inventories = await cursor.toArray();
             res.send(inventories);
         });
@@ -41,6 +47,13 @@ async function run() {
         app.post('/inventory', async (req, res) => {
             const newInventory = req.body;
             const result = await inventoryCollection.insertOne(newInventory);
+            res.send(result);
+        })
+        // delete
+        app.delete('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await inventoryCollection.deleteOne(query);
             res.send(result);
         })
 
