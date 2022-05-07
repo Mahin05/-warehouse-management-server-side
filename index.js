@@ -5,11 +5,11 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
- 
+
 // middleware
 app.use(cors());
 app.use(express.json());
- 
+
 // const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xnakg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.sjenz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -56,6 +56,15 @@ async function run() {
             const result = await inventoryCollection.deleteOne(query);
             res.send(result);
         })
+        
+        // individuals item
+        app.get('/item', async (req, res) => {
+            const email = req.query.email;
+            const query = {email:email};
+            const cursor = inventoryCollection.find(query);
+            const items = await cursor.toArray();
+            res.send(items);
+        })
 
         // delivered collection api
 
@@ -78,8 +87,8 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-   res.send('Running Islams Vehicle Corporation Successfully!!')
+    res.send('Running Islams Vehicle Corporation Successfully!!')
 })
-  app.listen(port, () => {
- console.log(`Example app listening on port ${port}`)
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
 })
